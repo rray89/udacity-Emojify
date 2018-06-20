@@ -231,5 +231,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Delete the temporary image file
         BitmapUtils.deleteImageFile(this, mTempPhotoPath);
+
+        // COMPLETED TODO (2.3): Call the new detectFaces() method, passing in the resampled bitmap to detect
+            // the faces in the picture.
+
+        //call Emojifier to detect faces
+        Emojifier.detectFaces(this, mResultsBitmap);
+        mImageView.setImageBitmap(mResultsBitmap);
     }
 }
