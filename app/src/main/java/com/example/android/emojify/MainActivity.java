@@ -39,6 +39,11 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import timber.log.Timber;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -46,40 +51,34 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String FILE_PROVIDER_AUTHORITY = "com.example.android.fileprovider";
 
-    private ImageView mImageView;
+    @BindView(R.id.image_view) ImageView mImageView;
 
-    private Button mEmojifyButton;
-    private FloatingActionButton mShareFab;
-    private FloatingActionButton mSaveFab;
-    private FloatingActionButton mClearFab;
+    @BindView(R.id.emojify_button) Button mEmojifyButton;
+    @BindView(R.id.share_button) FloatingActionButton mShareFab;
+    @BindView(R.id.save_button) FloatingActionButton mSaveFab;
+    @BindView(R.id.clear_button) FloatingActionButton mClearFab;
 
-    private TextView mTitleTextView;
+    //private TextView mTitleTextView;
+    @BindView(R.id.title_text_view) TextView mTitleTextView;
 
     private String mTempPhotoPath;
 
     private Bitmap mResultsBitmap;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Bind the views
-        mImageView = findViewById(R.id.image_view);
-        mEmojifyButton = findViewById(R.id.emojify_button);
-        mShareFab = findViewById(R.id.share_button);
-        mSaveFab = findViewById(R.id.save_button);
-        mClearFab = findViewById(R.id.clear_button);
-        mTitleTextView = findViewById(R.id.title_text_view);
+        ButterKnife.bind(this);
+
+        Timber.plant(new Timber.DebugTree());
     }
 
-    /**
-     * OnClick method for "Emojify Me!" Button. Launches the camera app.
-     *
-     * @param view The emojify me button.
-     */
-    public void emojifyMe(View view) {
+
+    //OnCLick method for "Emojify Me!" Button. Launched the camera app.
+    @OnClick(R.id.emojify_button)
+    public void emojifyMe() {
         // Check for the external storage permission
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -94,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
             launchCamera();
         }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -188,10 +188,9 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * OnClick method for the save button.
-     *
-     * @param view The save button.
      */
-    public void saveMe(View view) {
+    @OnClick(R.id.save_button)
+    public void saveMe() {
         // Delete the temporary image file
         BitmapUtils.deleteImageFile(this, mTempPhotoPath);
 
@@ -201,10 +200,9 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * OnClick method for the share button, saves and shares the new bitmap.
-     *
-     * @param view The share button.
      */
-    public void shareMe(View view) {
+    @OnClick(R.id.share_button)
+    public void shareMe() {
         // Delete the temporary image file
         BitmapUtils.deleteImageFile(this, mTempPhotoPath);
 
@@ -217,10 +215,9 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * OnClick for the clear button, resets the app to original state.
-     *
-     * @param view The clear button.
      */
-    public void clearImage(View view) {
+    @OnClick(R.id.clear_button)
+    public void clearImage() {
         // Clear the image and toggle the view visibility
         mImageView.setImageResource(0);
         mEmojifyButton.setVisibility(View.VISIBLE);
@@ -236,7 +233,11 @@ public class MainActivity extends AppCompatActivity {
             // the faces in the picture.
 
         //call Emojifier to detect faces
-        Emojifier.detectFaces(this, mResultsBitmap);
-        mImageView.setImageBitmap(mResultsBitmap);
+        //Emojifier.detectFacesAndOverlayMoji(this, mResultsBitmap);
+
+        // COMPLETED TODO (5.10): Change the method call from detectFaces() to detectFacesAndOverlayEmoji() and
+            // assign the result to mResultsBitmap.
+
+        //mImageView.setImageBitmap(mResultsBitmap);
     }
 }
